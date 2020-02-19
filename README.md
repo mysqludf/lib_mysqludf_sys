@@ -1,5 +1,7 @@
-![docker-automated](https://img.shields.io/docker/automated/pavelsr/mysqludf_sys)
-![docker-build](https://img.shields.io/docker/build/pavelsr/mysqludf_sys)
+![docker-cloud-automated](https://img.shields.io/docker/cloud/automated/pavelsr/mysqludf_sys)
+![docker-cloud-build](https://img.shields.io/docker/cloud/build/pavelsr/mysqludf_sys)
+![docker-stars](https://img.shields.io/docker/stars/pavelsr/mysqludf_sys)
+![docker-pulls](https://img.shields.io/docker/pulls/pavelsr/mysqludf_sys)
 
 <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
@@ -14,7 +16,7 @@
 	- [Build](#build)
 	- [Run](#run)
 - [EXAMPLES](#examples)
-- [SECUIRITY PRECUTIONS](#secuirity-precutions)
+- [SECUIRITY PRECAUTIONS](#secuirity-precautions)
 
 <!-- /TOC -->
 
@@ -79,7 +81,7 @@ SELECT sys_eval('~/hello_world.sh')
 SELECT sys_eval('bash /root/lib_mysqludf_sys/hello_world.sh')
 ```
 
-# SECUIRITY PRECUTIONS
+# SECUIRITY PRECAUTIONS
 
 UDFs are available to all database users - you cannot grant EXECUTE privileges for them.
 As the commandstring passed to `sys_exec` or `sys_eval` can do pretty much everything, 
