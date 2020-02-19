@@ -1,3 +1,6 @@
+![docker-automated](https://img.shields.io/docker/automated/pavelsr/mysqludf_sys)
+![docker-build](https://img.shields.io/docker/build/pavelsr/mysqludf_sys)
+
 <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
 - [DESCRIPTION](#description)
