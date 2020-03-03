@@ -385,6 +385,11 @@ my_bool sys_eval_init(
 void sys_eval_deinit(
 	UDF_INIT *initid
 ){
+	if(initid->ptr)
+	{
+		free(initid->ptr);
+		initid->ptr = NULL;
+	}
 }
 char* sys_eval(
 	UDF_INIT *initid
@@ -394,32 +399,46 @@ char* sys_eval(
 ,	char *is_null
 ,	char *error
 ){
-	FILE *pipe;
-	char line[1024];
-	unsigned long outlen, linelen;
-
-	result = malloc(1);
-	outlen = 0;
-
-	pipe = popen(args->args[0], "r");
-
-	while (fgets(line, sizeof(line), pipe) != NULL) {
-		linelen = strlen(line);
-		result = realloc(result, outlen + linelen);
-		strncpy(result + outlen, line, linelen);
-		outlen = outlen + linelen;
-	}
-
-	pclose(pipe);
-
-	if (!(*result) || result == NULL) {
+	// Rewrite by ZhengWang wa56abc@gmail.com
+	// result is char[256], we could use it or we alloc new buffer & free it at deinit
+	FILE *pipe = popen(args->args[0], "r");
+	if(!pipe)
+	{
+		*error = 1;
+		*length = 0;
 		*is_null = 1;
-	} else {
-		result[outlen] = 0x00;
-		*length = strlen(result);
+		initid->ptr = NULL;
+		memset(result, 0, 256);
+
+		return result;
 	}
 
-	return result;
+	unsigned len_ = fread(result, 1, 256, pipe);
+	if( len_ < 256 )
+	{	
+		// For Length < 256, we store string in result, and return it directly
+		pclose(pipe);
+		*length = len_;
+		return result;
+	}
+
+	char* buf_ = (char*)malloc(len_);
+	unsigned long bufLen_ = len_;
+	memcpy(buf_ + 0, result, len_);
+
+	while((len_ = fread(result, 1, 256, pipe)) > 0 )
+	{
+		buf_ = (char*)realloc(buf_, bufLen_ + len_);
+		memcpy(buf_ + bufLen_, result, len_);
+		bufLen_ += len_;
+	}
+	
+	pclose(pipe);
+	*length = bufLen_;
+	initid->ptr = buf_;
+	memset(result, 0, 256);
+
+	return buf_;
 }
 
 
